@@ -9,12 +9,15 @@ const VOCATIONAL_OPTIONS = [
   '五專前三年',
 ];
 
+const EMPTY_FORM = {
+  schoolNo: '', school: '', schoolFull: '', vocational: '', city: '', address: '', tel: '',
+  contract: '', conTitle: '', conEmail: '', conMobile: '', password: '',
+};
+
 export default function SchoolEditForm() {
   const [cities, setCities] = useState<string[]>([]);
-  const [form, setForm] = useState({
-    schoolNo: '', school: '', schoolFull: '', vocational: '', city: '', address: '', tel: '',
-    contract: '', conTitle: '', conEmail: '', conMobile: '', password: '',
-  });
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [savedForm, setSavedForm] = useState(EMPTY_FORM);
   const [msg, setMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -25,7 +28,7 @@ export default function SchoolEditForm() {
     });
     fetch('/api/profile').then(r => r.json()).then(data => {
       if (data.error) return;
-      setForm({
+      const loaded = {
         schoolNo:   data.schoolno || '',
         school:     data.school || '',
         schoolFull: data.schoolfull || '',
@@ -38,7 +41,9 @@ export default function SchoolEditForm() {
         conEmail:   data.conemail || '',
         conMobile:  data.conmobile || '',
         password:   data.password || '',
-      });
+      };
+      setForm(loaded);
+      setSavedForm(loaded);
     });
   }, []);
 
@@ -67,9 +72,16 @@ export default function SchoolEditForm() {
       setMsg(`錯誤：${data.error}`);
     } else {
       setMsg('資料已儲存');
+      setSavedForm(form);
       setIsEditing(false);
     }
     setLoading(false);
+  };
+
+  const handleCancel = () => {
+    setForm(savedForm);
+    setMsg('');
+    setIsEditing(false);
   };
 
   const field = (label: string, name: keyof typeof form, type = 'text') => {
@@ -137,10 +149,16 @@ export default function SchoolEditForm() {
       </div>
       {msg && <p className={`text-sm mb-2 ${msg.startsWith('錯誤') ? 'text-red-600' : 'text-green-600'}`}>{msg}</p>}
       {isEditing ? (
-        <button type="submit" disabled={loading}
-          className="bg-blue-600 text-white px-6 py-2 rounded text-sm hover:bg-blue-700 disabled:opacity-50">
-          {loading ? '儲存中...' : '儲存'}
-        </button>
+        <div className="flex gap-3">
+          <button type="submit" disabled={loading}
+            className="bg-blue-600 text-white px-6 py-2 rounded text-sm hover:bg-blue-700 disabled:opacity-50">
+            {loading ? '儲存中...' : '儲存'}
+          </button>
+          <button type="button" onClick={handleCancel} disabled={loading}
+            className="border border-gray-300 text-gray-700 px-6 py-2 rounded text-sm hover:bg-gray-50 disabled:opacity-50">
+            復原
+          </button>
+        </div>
       ) : (
         <button type="button" onClick={() => { setMsg(''); setIsEditing(true); }}
           className="bg-blue-600 text-white px-6 py-2 rounded text-sm hover:bg-blue-700">

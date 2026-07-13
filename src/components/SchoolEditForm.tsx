@@ -151,7 +151,7 @@ export default function SchoolEditForm() {
       {isEditing ? (
         <div className="flex gap-3">
           <button type="submit" disabled={loading}
-            className="bg-blue-600 text-white px-6 py-2 rounded text-sm hover:bg-blue-700 disabled:opacity-50">
+            className="bg-green-600 text-white px-6 py-2 rounded text-sm hover:bg-green-700 disabled:opacity-50">
             {loading ? '儲存中...' : '儲存'}
           </button>
           <button type="button" onClick={handleCancel} disabled={loading}

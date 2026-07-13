@@ -11,7 +11,7 @@ export async function GET() {
     .select('id, news')
     .eq('news_for', '文化館盃')
     .eq('valid', true)
-    .order('id', { ascending: true });
+    .order('sort', { ascending: true });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json(data);

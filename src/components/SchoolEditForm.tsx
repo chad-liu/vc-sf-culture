@@ -155,8 +155,8 @@ export default function SchoolEditForm() {
             {loading ? '儲存中...' : '儲存'}
           </button>
           <button type="button" onClick={handleCancel} disabled={loading}
-            className="border border-gray-300 text-gray-700 px-6 py-2 rounded text-sm hover:bg-gray-50 disabled:opacity-50">
-            復原
+            className="bg-orange-500 text-white px-6 py-2 rounded text-sm hover:bg-orange-600 disabled:opacity-50">
+            取消
           </button>
         </div>
       ) : (

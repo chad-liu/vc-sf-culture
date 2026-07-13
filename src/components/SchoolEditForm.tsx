@@ -107,7 +107,7 @@ export default function SchoolEditForm() {
 
   return (
     <form onSubmit={handleSubmit} className="bg-blue-50 rounded-lg p-6 max-w-xl">
-      <h2 className="text-base font-bold text-gray-800 mb-4">承辦人資料編輯</h2>
+      <h2 className="text-base font-bold text-gray-800 mb-4">資料編輯</h2>
       {field('學校代碼', 'schoolNo')}
       {field('學校全稱', 'schoolFull')}
       {field('學校簡稱', 'school')}
@@ -129,7 +129,7 @@ export default function SchoolEditForm() {
         <select name="city" value={form.city} onChange={handleChange} required
           disabled={!isEditing}
           className={`flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm ${!isEditing ? 'bg-gray-100' : 'bg-white'}`}>
-          <option value="">(必填)</option>
+          <option value="" disabled hidden>請選取縣市</option>
           {cities.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
       </div>

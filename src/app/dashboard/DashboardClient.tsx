@@ -58,7 +58,7 @@ export default function DashboardClient({ school, contract, conTitle }: Props) {
       <div className="px-6 pt-4">
         <div className="flex gap-1 border-b border-gray-300">
           <button className={tabClass('notice')} onClick={() => setTab('notice')}>注意事項</button>
-          <button className={tabClass('profile')} onClick={() => setTab('profile')}>資料編輯</button>
+          <button className={tabClass('profile')} onClick={() => setTab('profile')}>學校資料</button>
           <button className={tabClass('students')} onClick={() => setTab('students')}>參賽學生</button>
         </div>
       </div>

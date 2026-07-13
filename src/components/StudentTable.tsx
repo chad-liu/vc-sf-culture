@@ -8,7 +8,6 @@ interface Student {
   stuname: string;
   teaname: string;
   youtube: string;
-  isfinal: boolean;
 }
 
 export default function StudentTable() {
@@ -49,13 +48,12 @@ export default function StudentTable() {
               <th className="px-3 py-2 text-left whitespace-nowrap">指導老師</th>
               <th className="px-3 py-2 text-left whitespace-nowrap">Youtube(11碼)</th>
               <th className="px-3 py-2 text-left whitespace-nowrap">影片</th>
-              <th className="px-3 py-2 text-left whitespace-nowrap">入決賽</th>
               <th className="px-3 py-2 text-left whitespace-nowrap">操作</th>
             </tr>
           </thead>
           <tbody>
             {students.length === 0 && (
-              <tr><td colSpan={7} className="text-center py-6 text-gray-400">尚無資料</td></tr>
+              <tr><td colSpan={6} className="text-center py-6 text-gray-400">尚無資料</td></tr>
             )}
             {students.map((s, i) => (
               <tr key={s.id} className={i % 2 === 0 ? 'bg-white' : 'bg-blue-50'}>
@@ -72,11 +70,6 @@ export default function StudentTable() {
                   )}
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap">
-                  {s.isfinal
-                    ? <span className="text-xs bg-green-600 text-white px-2 py-0.5 rounded">是</span>
-                    : <span className="text-xs bg-gray-300 text-gray-600 px-2 py-0.5 rounded">否</span>}
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap">
                   {deleteConfirm === s.id ? (
                     <div className="flex items-center gap-1.5">
                       <span className="text-xs text-red-600">確認刪除?</span>
@@ -88,7 +81,7 @@ export default function StudentTable() {
                   ) : (
                     <div className="flex items-center gap-1.5">
                       <button onClick={() => { setEditStudent(s); setShowModal(true); }}
-                        className="bg-blue-600 text-white px-2.5 py-1 rounded text-xs hover:bg-blue-700 transition-colors">編輯</button>
+                        className="bg-orange-500 text-white px-2.5 py-1 rounded text-xs hover:bg-orange-600 transition-colors">編輯</button>
                       <button onClick={() => setDeleteConfirm(s.id)}
                         className="bg-red-500 text-white px-2.5 py-1 rounded text-xs hover:bg-red-600 transition-colors">刪除</button>
                     </div>

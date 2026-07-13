@@ -17,6 +17,7 @@ export default function SchoolEditForm() {
   });
   const [msg, setMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     fetch('/api/cities').then(r => r.json()).then(data => {
@@ -62,27 +63,35 @@ export default function SchoolEditForm() {
       body: JSON.stringify(form),
     });
     const data = await res.json();
-    setMsg(data.error ? `錯誤：${data.error}` : '資料已儲存');
+    if (data.error) {
+      setMsg(`錯誤：${data.error}`);
+    } else {
+      setMsg('資料已儲存');
+      setIsEditing(false);
+    }
     setLoading(false);
   };
 
-  const field = (label: string, name: keyof typeof form, type = 'text') => (
-    <div className="flex items-center gap-2 mb-3">
-      <label className="w-32 text-sm text-gray-700 text-right flex-shrink-0">
-        {label}
-      </label>
-      <input
-        type={type}
-        name={name}
-        value={form[name]}
-        onChange={handleChange}
-        readOnly={name === 'schoolNo'}
-        required
-        placeholder="(必填)"
-        className={`flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm ${name === 'schoolNo' ? 'bg-gray-100' : 'bg-white'}`}
-      />
-    </div>
-  );
+  const field = (label: string, name: keyof typeof form, type = 'text') => {
+    const readOnly = !isEditing || name === 'schoolNo';
+    return (
+      <div className="flex items-center gap-2 mb-3">
+        <label className="w-32 text-sm text-gray-700 text-right flex-shrink-0">
+          {label}
+        </label>
+        <input
+          type={type}
+          name={name}
+          value={form[name]}
+          onChange={handleChange}
+          readOnly={readOnly}
+          required
+          placeholder="(必填)"
+          className={`flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm ${readOnly ? 'bg-gray-100' : 'bg-white'}`}
+        />
+      </div>
+    );
+  };
 
   return (
     <form onSubmit={handleSubmit} className="bg-blue-50 rounded-lg p-6 max-w-xl">
@@ -95,7 +104,8 @@ export default function SchoolEditForm() {
           職業類科
         </label>
         <select name="vocational" value={form.vocational} onChange={handleChange} required
-          className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm bg-white">
+          disabled={!isEditing}
+          className={`flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm ${!isEditing ? 'bg-gray-100' : 'bg-white'}`}>
           <option value="">(必填)</option>
           {VOCATIONAL_OPTIONS.map(v => <option key={v} value={v}>{v}</option>)}
         </select>
@@ -105,7 +115,8 @@ export default function SchoolEditForm() {
           縣市
         </label>
         <select name="city" value={form.city} onChange={handleChange} required
-          className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm bg-white">
+          disabled={!isEditing}
+          className={`flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm ${!isEditing ? 'bg-gray-100' : 'bg-white'}`}>
           <option value="">(必填)</option>
           {cities.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
@@ -121,14 +132,21 @@ export default function SchoolEditForm() {
           密碼
         </label>
         <input type="text" name="password" value={form.password} onChange={handleChange}
-          required placeholder="(必填)"
-          className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm bg-white text-black" />
+          readOnly={!isEditing} required placeholder="(必填)"
+          className={`flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm text-black ${!isEditing ? 'bg-gray-100' : 'bg-white'}`} />
       </div>
       {msg && <p className={`text-sm mb-2 ${msg.startsWith('錯誤') ? 'text-red-600' : 'text-green-600'}`}>{msg}</p>}
-      <button type="submit" disabled={loading}
-        className="bg-blue-600 text-white px-6 py-2 rounded text-sm hover:bg-blue-700 disabled:opacity-50">
-        {loading ? '儲存中...' : '儲存'}
-      </button>
+      {isEditing ? (
+        <button type="submit" disabled={loading}
+          className="bg-blue-600 text-white px-6 py-2 rounded text-sm hover:bg-blue-700 disabled:opacity-50">
+          {loading ? '儲存中...' : '儲存'}
+        </button>
+      ) : (
+        <button type="button" onClick={() => { setMsg(''); setIsEditing(true); }}
+          className="bg-blue-600 text-white px-6 py-2 rounded text-sm hover:bg-blue-700">
+          修改
+        </button>
+      )}
     </form>
   );
 }

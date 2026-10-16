@@ -10,7 +10,11 @@ interface Student {
   youtube: string;
 }
 
-export default function StudentTable() {
+interface Props {
+  canEdit: boolean;
+}
+
+export default function StudentTable({ canEdit }: Props) {
   const [students, setStudents] = useState<Student[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [editStudent, setEditStudent] = useState<Student | null>(null);
@@ -32,12 +36,12 @@ export default function StudentTable() {
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-4">
+      {canEdit && <div className="flex items-center gap-3 mb-4">
         <button onClick={() => { setEditStudent(null); setShowModal(true); }}
           className="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700">
           新增參賽學生
         </button>
-      </div>
+      </div>}
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm border-collapse">
@@ -48,12 +52,12 @@ export default function StudentTable() {
               <th className="px-3 py-2 text-left whitespace-nowrap">指導老師</th>
               <th className="px-3 py-2 text-left whitespace-nowrap">Youtube(11碼)</th>
               <th className="px-3 py-2 text-left whitespace-nowrap">影片</th>
-              <th className="px-3 py-2 text-left whitespace-nowrap">操作</th>
+              {canEdit && <th className="px-3 py-2 text-left whitespace-nowrap">操作</th>}
             </tr>
           </thead>
           <tbody>
             {students.length === 0 && (
-              <tr><td colSpan={6} className="text-center py-6 text-gray-400">尚無資料</td></tr>
+              <tr><td colSpan={canEdit ? 6 : 5} className="text-center py-6 text-gray-400">尚無資料</td></tr>
             )}
             {students.map((s, i) => (
               <tr key={s.id} className={i % 2 === 0 ? 'bg-white' : 'bg-blue-50'}>
@@ -69,7 +73,7 @@ export default function StudentTable() {
                     </a>
                   )}
                 </td>
-                <td className="px-3 py-2 whitespace-nowrap">
+                {canEdit && <td className="px-3 py-2 whitespace-nowrap">
                   {deleteConfirm === s.id ? (
                     <div className="flex items-center gap-1.5">
                       <span className="text-xs text-red-600">確認刪除?</span>
@@ -86,7 +90,7 @@ export default function StudentTable() {
                         className="bg-red-500 text-white px-2.5 py-1 rounded text-xs hover:bg-red-600 transition-colors">刪除</button>
                     </div>
                   )}
-                </td>
+                </td>}
               </tr>
             ))}
           </tbody>

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabase, canEditStudents } from '@/lib/supabase';
 import { getSession } from '@/lib/session';
 
 const CUL_YEAR = '2026';
@@ -22,6 +22,7 @@ export async function GET() {
 export async function POST(req: Request) {
   const session = await getSession();
   if (!session.isLoggedIn) return NextResponse.json({ error: '未登入' }, { status: 401 });
+  if (!(await canEditStudents())) return NextResponse.json({ error: '目前不開放新增學生資料' }, { status: 403 });
 
   const { stuName, teaName, youtube } = await req.json();
 

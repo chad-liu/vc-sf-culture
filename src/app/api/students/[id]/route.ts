@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabase, canEditStudents } from '@/lib/supabase';
 import { getSession } from '@/lib/session';
 
 async function verifyOwnership(id: string, session: Awaited<ReturnType<typeof getSession>>) {
@@ -18,6 +18,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   if (!session.isLoggedIn) return NextResponse.json({ error: '未登入' }, { status: 401 });
 
   const { id } = await params;
+  if (!(await canEditStudents())) return NextResponse.json({ error: '目前不開放編輯學生資料' }, { status: 403 });
   const owned = await verifyOwnership(id, session);
   if (!owned) return NextResponse.json({ error: '無權限修改此筆資料' }, { status: 403 });
 
@@ -44,6 +45,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
   if (!session.isLoggedIn) return NextResponse.json({ error: '未登入' }, { status: 401 });
 
   const { id } = await params;
+  if (!(await canEditStudents())) return NextResponse.json({ error: '目前不開放刪除學生資料' }, { status: 403 });
   const owned = await verifyOwnership(id, session);
   if (!owned) return NextResponse.json({ error: '無權限刪除此筆資料' }, { status: 403 });
 

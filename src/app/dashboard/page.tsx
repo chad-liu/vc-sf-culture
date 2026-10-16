@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/session';
+import { canEditStudents } from '@/lib/supabase';
 import DashboardClient from './DashboardClient';
 
 export default async function DashboardPage() {
@@ -11,6 +12,7 @@ export default async function DashboardPage() {
       school={session.school}
       contract={session.contract}
       conTitle={session.conTitle}
+      canEdit={await canEditStudents()}
     />
   );
 }

@@ -11,9 +11,10 @@ interface Props {
   school: string;
   contract: string;
   conTitle: string;
+  canEdit: boolean;
 }
 
-export default function DashboardClient({ school, contract, conTitle }: Props) {
+export default function DashboardClient({ school, contract, conTitle, canEdit }: Props) {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>('notice');
 
@@ -67,7 +68,7 @@ export default function DashboardClient({ school, contract, conTitle }: Props) {
       <div className="px-6 py-5">
         {tab === 'notice' && <Notice />}
         {tab === 'profile' && <SchoolEditForm />}
-        {tab === 'students' && <StudentTable />}
+        {tab === 'students' && <StudentTable canEdit={canEdit} />}
       </div>
     </div>
   );
